@@ -1,43 +1,44 @@
 <?php
 
-function split_numbers($number)
-{
-    $arr = array();
 
-    while((int)$number != 0) {
-
-
-        $number_part = $number %10;
-        $number = $number / 10;
-        array_push($arr, $number_part);
-    }
-
-    return array($arr, count($arr) );
-}
-
-function check_if_happy($arr)
+function check_if_happy($number, $limit)
 {
     $sum = 0;
-    for($i=0; $i<$arr[1]; $i++) {
-        $sum = $sum + pow($arr[1][$i], 2);
-    }
-    if ($sum == 1) {
-        return 1;
-    } else {
-        echo $sum."\n";
-        check_if_happy(split_numbers($sum));
+    while($number != 0) {
+        $number_part = $number % 10;
+        $number = (int)($number /10);
+        $sum = $sum + pow($number_part, 2);
+
     }
 
+    if($sum == 0) {
+        echo "0\n";
+        return 0;
+    }
+
+    if($sum == 1) {
+        echo "1\n";
+        return 1;
+    } else {
+        if ($limit == 1000) {
+            echo "0\n";
+            return 0;
+        }
+        check_if_happy($sum, ++$limit);
+    }
 }
 
 $fh = fopen($argv[1], "r");
 
 while (true) {
-    $sum = 0;
     $number = fgets($fh);
     if($number === false) {
         break;
     }
 
-    echo check_if_happy(split_numbers($number));
+    // convert the number to int
+    $number = (int)$number;
+
+    // send the number to function and check if it's happy number
+    check_if_happy($number, 0);
 }
